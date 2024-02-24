@@ -6,7 +6,7 @@ const banner = document.querySelector('.app__image');
 const titulo = document.querySelector('.app__title');
 const botoes = document.querySelectorAll('.app__card-button'); /* selecionando todos os botoes com essa classe */
 const musicaFocoInput = document.querySelector('#alternar-musica');
-const  iniciarOuPausarBt = document.querySelector('#start-pause span');
+const iniciarOuPausarBt = document.querySelector('#start-pause span');
 const iniciarOuPausarBtIcone = document.querySelector('.app__card-primary-butto-icon');
 const tempoNaTela = document.querySelector('#timer');
 
@@ -97,6 +97,11 @@ const contagemRegressiva = () => {
     if (tempoDecorridoEmSegundos <= 0) {
         audioTempoFinalizado.play();
         alert('Tempo finalizado')
+        const focoAtivo = html.getAttribute('data-contexto') == 'foco'
+        if (focoAtivo) {
+            const evento = new CustomEvent('focoFinalizado')
+            document.dispatchEvent(evento)
+        }
         zerar()
         return
     }
@@ -117,23 +122,23 @@ function iniciarOuPausar() {
     }
     audioPlay.play();
     intervaloID = setInterval(contagemRegressiva, 1000),
-    iniciarOuPausarBt.textContent = "Pausar", /* quando o botao de comecar estiver funcionando mudei o texto para "Pausar" */
-    iniciarOuPausarBtIcone.setAttribute( 'src', `/imagens/pause.png`);
+        iniciarOuPausarBt.textContent = "Pausar", /* quando o botao de comecar estiver funcionando mudei o texto para "Pausar" */
+        iniciarOuPausarBtIcone.setAttribute('src', `/imagens/pause.png`);
 }
 
 function zerar() {
     /* clearInterval = interrompe algum codigo */
     clearInterval(intervaloID);
     iniciarOuPausarBt.textContent = "Começar"; /* quando o usario clicar no botao após inicar ele, o botao voltara pra a texto inicial */
-    iniciarOuPausarBtIcone.setAttribute ('src', `/imagens/play_arrow.png`)
+    iniciarOuPausarBtIcone.setAttribute('src', `/imagens/play_arrow.png`)
     intervaloID = null;
 };
 
 /* mostrando o tempo na tela */
-function mostrarTempo (){
+function mostrarTempo() {
     /* formatando numero */
-    const tempo = new Date(tempoDecorridoEmSegundos * 1000); 
-    const tempoFormatado = tempo.toLocaleTimeString('pt-Br', {minute: "2-digit", second: '2-digit'});
+    const tempo = new Date(tempoDecorridoEmSegundos * 1000);
+    const tempoFormatado = tempo.toLocaleTimeString('pt-Br', { minute: "2-digit", second: '2-digit' });
     tempoNaTela.innerHTML = `${tempoFormatado}`
 };
 
